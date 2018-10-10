@@ -3,12 +3,14 @@ import UserController from "../controllers/UserController";
 import LocationController from "../controllers/LocationController";
 import ActivityTypeController from "../controllers/ActivityTypeController";
 import EventController from "../controllers/EventController";
+import ActivityController from "../controllers/ActivityController";
 
 export class Routes {
     public userCtrl: UserController = new UserController();
     public locationCtrl: LocationController = new LocationController();
     public activityTypeCtrl: ActivityTypeController = new ActivityTypeController();
     public eventCtrl: EventController = new EventController();
+    public activityCtrl: ActivityController = new ActivityController();
 
     public routes(app): void {
         app.route('/')
@@ -22,6 +24,7 @@ export class Routes {
         this.setLocationRoutes(app);
         this.setActivityTypeRoutes(app);
         this.setEventRoutes(app);
+        this.setActivityRoutes(app);
     }
 
     public setUserRoutes(app): void {
@@ -54,5 +57,15 @@ export class Routes {
       app.get('/api/event/:id', this.userCtrl.authenticate, this.eventCtrl.getEvent);
       app.delete('/api/event/:id', this.userCtrl.authenticate, this.eventCtrl.deleteEvent);
       app.patch('/api/event/:id', this.userCtrl.authenticate, this.eventCtrl.updateEvent);
+      app.post('/api/event/:id/invite', this.userCtrl.authenticate, this.eventCtrl.inviteUsers);
+    }
+
+    public setActivityRoutes(app): void {
+      app.post('/api/activity', this.userCtrl.authenticate, this.activityCtrl.addNewActivity);
+      app.get('/api/activity', this.userCtrl.authenticate, this.activityCtrl.getAllActivities);
+      app.get('/api/activity/:id', this.userCtrl.authenticate, this.activityCtrl.getActivity);
+      // app.delete('/api/activity/:id', this.userCtrl.authenticate, this.activityCtrl.deleteEvent);
+      // app.patch('/api/activity/:id', this.userCtrl.authenticate, this.activityCtrl.updateEvent);
+      // app.post('/api/activity/:id/invite', this.userCtrl.authenticate, this.activityCtrl.inviteUsers);
     }
 }

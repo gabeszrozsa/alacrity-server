@@ -89,7 +89,16 @@ export default class EventController {
   }
 
   public inviteUsers(req: Request, res: Response) {
-    
+    const id = req.params.id;
+    const attendees = req.body.attendees;
+
+    Event.findOneAndUpdate({ _id: id }, { $addToSet: {attendees: attendees }},
+      { new: true }, (err, result) => {
+        if(err){
+          res.send(err);
+        }
+        res.json(result);
+    });
   }
 
   private mapEventWithLocation(event: IEvent, location: ILocation): IEvent {
