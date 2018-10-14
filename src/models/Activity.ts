@@ -27,16 +27,21 @@ const ActivitySchema = new Schema({
   },
   comments: {
       type: [{
-        _id: Schema.Types.ObjectId,
         createdBy: Schema.Types.ObjectId,
-        createdAt: Date,
-        text: String
+        createdAt: {
+            type: Date,
+            default: Date.now
+        },
+        text: {
+          type: String,
+          required: [true, 'Add comment text']
+        }
       }],
       default: []
   },
   likes: {
     type: [Schema.Types.ObjectId],
-    default: null
+    default: []
   },
   createdBy: {
     type: Schema.Types.ObjectId,

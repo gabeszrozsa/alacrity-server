@@ -64,8 +64,10 @@ export class Routes {
       app.post('/api/activity', this.userCtrl.authenticate, this.activityCtrl.addNewActivity);
       app.get('/api/activity', this.userCtrl.authenticate, this.activityCtrl.getAllActivities);
       app.get('/api/activity/:id', this.userCtrl.authenticate, this.activityCtrl.getActivity);
-      // app.delete('/api/activity/:id', this.userCtrl.authenticate, this.activityCtrl.deleteEvent);
-      // app.patch('/api/activity/:id', this.userCtrl.authenticate, this.activityCtrl.updateEvent);
-      // app.post('/api/activity/:id/invite', this.userCtrl.authenticate, this.activityCtrl.inviteUsers);
+      app.delete('/api/activity/:id', this.userCtrl.authenticate, this.activityCtrl.deleteActivity);
+      app.patch('/api/activity/:id', this.userCtrl.authenticate, this.activityCtrl.updateActivity);
+      app.post('/api/activity/:id/comment', this.userCtrl.authenticate, this.activityCtrl.addComment);
+      app.get('/api/activity/:id/comment', this.userCtrl.authenticate, this.activityCtrl.getComments);
+      app.delete('/api/activity/:id/comment/:comment', this.userCtrl.authenticate, this.activityCtrl.deleteComment);
     }
 }

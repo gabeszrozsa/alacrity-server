@@ -3,12 +3,15 @@ import Event from '../models/Event';
 import Location from '../models/Location';
 import Activity from '../models/Activity';
 import ActivityType from '../models/ActivityType';
-import { IEvent, ILocation, IActivity, IActivityType, IComment } from '../entities/';
+import User from '../models/User';
+import { IEvent, ILocation, IActivity, IActivityType, IComment, IUser, ILike } from '../entities/';
 
 export default class ActivityController {
   constructor() {
     this.getActivity = this.getActivity.bind(this);
     this.getAllActivities = this.getAllActivities.bind(this);
+    this.getComments = this.getComments.bind(this);
+    this.getLikes = this.getLikes.bind(this);
   }
 
   public addNewActivity(req: Request, res: Response) {
@@ -76,49 +79,152 @@ export default class ActivityController {
         const result = this.createActivity(activity, location, activityType);
         res.json(result);
       } catch (error) {
-        console.log('[ERROR] - ActivityController :: getActivity');
+        console.log('[ERROR] - ActivityController :: getActivity', error);
       }
 
     });
   }
 
-  // public deleteEvent(req: Request, res: Response) {
-  //   const id = req.params.id;
-  //
-  //   if (!Event.validateID(id)) {
-  //       return res.status(404).send();
-  //   }
-  //
-  //   Event.deleteOne({ _id: id }, (err, result) => {
-  //     if(err){
-  //       res.send(err);
-  //     }
-  //     res.json({ message: 'Successfully deleted event!'});
-  //   });
-  // }
-  //
-  // public updateEvent(req: Request, res: Response) {
-  //   Event.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, (err, result) => {
-  //     if(err){
-  //       res.send(err);
-  //     }
-  //     res.json(result);
-  //   });
-  // }
-  //
-  // public inviteUsers(req: Request, res: Response) {
-  //   const id = req.params.id;
-  //   const attendees = req.body.attendees;
-  //
-  //   Event.findOneAndUpdate({ _id: id }, { $addToSet: {attendees: attendees }},
-  //     { new: true }, (err, result) => {
-  //       if(err){
-  //         res.send(err);
-  //       }
-  //       res.json(result);
-  //   });
-  // }
-  //
+  public deleteActivity(req: Request, res: Response) {
+    const id = req.params.id;
+
+    if (!Activity.validateID(id)) {
+        return res.status(404).send();
+    }
+
+    Activity.deleteOne({ _id: id }, (err, result) => {
+      if(err){
+        res.send(err);
+      }
+      res.json({ message: 'Successfully deleted activity!'});
+    });
+  }
+
+  public updateActivity(req: Request, res: Response) {
+    Activity.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, (err, result) => {
+      if(err){
+        res.send(err);
+      }
+      res.json(result);
+    });
+  }
+
+  public addComment(req: Request, res: Response) {
+    const id = req.params.id;
+    const comment = {
+      text: req.body.text,
+      createdBy: req.body.user._id
+    };
+
+    Activity.findOneAndUpdate({ _id: id }, { $push: {comments: comment }},
+      { new: true }, (err, result) => {
+        if(err){
+          res.send(err);
+        }
+        res.json(result);
+    });
+  }
+
+  public getComments(req: Request, res: Response) {
+    const id = req.params.id;
+
+    if (!Activity.validateID(id)) {
+        return res.status(404).send();
+    }
+
+    Activity.findById(id).then(async (activity) => {
+      if (!activity) {
+          res.status(404).send();
+      }
+
+      const comments: IComment[] = [];
+      for (let comment of activity.comments) {
+        try {
+          const user: IUser = await this.getUser(comment.createdBy);
+          const result: IComment = {
+            _id: comment._id,
+            text: comment.text,
+            createdAt: comment.createdAt,
+            createdBy: user
+          };
+
+          comments.push(result);
+        } catch (error) {
+          console.log('[ERROR] - ActivityController :: getComments', error);
+        }
+      }
+
+      res.json(comments);
+    });
+  }
+
+  public deleteComment(req: Request, res: Response) {
+    const id = req.params.id;
+    const commentId = req.params.comment;
+
+    Activity.findOneAndUpdate({ _id: id }, { $pull: { comments: { _id: commentId }}}, { new: true }, (err, result) => {
+      if(err){
+        res.send(err);
+      }
+      res.json(result);
+    });
+  }
+
+  public addLike(req: Request, res: Response) {
+    const id = req.params.id;
+
+    Activity.findOneAndUpdate({ _id: id }, { $addToSet: {likes: {createdBy: req.body.user._id }}},
+      { new: true }, (err, result) => {
+        if(err){
+          res.send(err);
+        }
+        res.json(result);
+    });
+  }
+
+  public getLikes(req: Request, res: Response) {
+    const id = req.params.id;
+
+    if (!Activity.validateID(id)) {
+        return res.status(404).send();
+    }
+
+    Activity.findById(id).then(async (activity) => {
+      if (!activity) {
+          res.status(404).send();
+      }
+
+      const likes: ILike[] = [];
+      for (let like of activity.likes) {
+        try {
+          const user: IUser = await this.getUser(like.createdBy);
+          const result: ILike = {
+            _id: like._id,
+            createdAt: like.createdAt,
+            createdBy: user
+          };
+
+          likes.push(result);
+        } catch (error) {
+          console.log('[ERROR] - ActivityController :: getLikes', error);
+        }
+      }
+
+      res.json(likes);
+    });
+  }
+
+  public deleteLike(req: Request, res: Response) {
+    const id = req.params.id;
+    const likeId = req.params.like;
+
+    Activity.findOneAndUpdate({ _id: id }, { $pull: { likes: { _id: likeId }}}, { new: true }, (err, result) => {
+      if(err){
+        res.send(err);
+      }
+      res.json(result);
+    });
+  }
 
   private createActivity(activity: IActivity, location: ILocation, activityType: IActivityType): IActivity {
     return <IActivity>{
@@ -142,6 +248,17 @@ export default class ActivityController {
             reject(`No Location with ID: ${location_id}`);
         }
         resolve(result);
+      });
+    });
+  }
+
+  private getUser(user_id: string) {
+    return new Promise<IUser>((resolve, reject) => {
+      User.findById(user_id).then(result => {
+        if (!result){
+            reject(`No User with ID: ${user_id}`);
+        }
+        resolve({ _id: result._id, email: result.email });
       });
     });
   }

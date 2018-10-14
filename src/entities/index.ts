@@ -4,12 +4,26 @@ interface IBaseEntity {
   createdAt: Date
 }
 
+export interface ILike extends IBaseEntity {
+  _id: string,
+  createdAt: Date,
+  createdBy: IUser
+}
+
+export interface IUser {
+  _id: string,
+  email: string
+}
+
 export interface IActivityType extends IBaseEntity {
   name: string,
 }
 
-export interface IComment extends IBaseEntity {
+export interface IComment {
+  _id: string,
   text: string,
+  createdAt: Date,
+  createdBy: IUser
 }
 
 export interface ILocation extends IBaseEntity {
