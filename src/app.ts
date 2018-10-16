@@ -1,6 +1,7 @@
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as mongoose from "mongoose";
+import * as cors from "cors";
 import { Routes } from "./routes/routes";
 
 class App {
@@ -18,6 +19,7 @@ class App {
   private config(): void {
     // support application/json type post data
     this.app.use(bodyParser.json());
+    this.app.use(cors());
 
     //support application/x-www-form-urlencoded post data
     this.app.use(bodyParser.urlencoded({ extended: false }));
