@@ -17,6 +17,7 @@ export default class ActivityController {
     this.addLike = this.addLike.bind(this);
     this.deleteLike = this.deleteLike.bind(this);
     this.getLikesWithUsers = this.getLikesWithUsers.bind(this);
+    this.getCommentsWithUsers = this.getCommentsWithUsers.bind(this);
   }
 
   public addNewActivity(req: Request, res: Response) {
@@ -122,11 +123,13 @@ export default class ActivityController {
     };
 
     Activity.findOneAndUpdate({ _id: id }, { $push: {comments: comment }},
-      { new: true }, (err, result) => {
+      { new: true }, async (err, activity) => {
         if(err){
           res.send(err);
         }
-        res.json(result);
+
+        const comments = await this.getCommentsWithUsers(activity.comments);
+        res.json(comments);
     });
   }
 
@@ -142,23 +145,7 @@ export default class ActivityController {
           res.status(404).send();
       }
 
-      const comments: IComment[] = [];
-      for (let comment of activity.comments) {
-        try {
-          const user: IUser = await this.getUser(comment.createdBy);
-          const result: IComment = {
-            _id: comment._id,
-            text: comment.text,
-            createdAt: comment.createdAt,
-            createdBy: user
-          };
-
-          comments.push(result);
-        } catch (error) {
-          console.log('[ERROR] - ActivityController :: getComments', error);
-        }
-      }
-
+      const comments = await this.getCommentsWithUsers(activity.comments);
       res.json(comments);
     });
   }
@@ -167,11 +154,17 @@ export default class ActivityController {
     const id = req.params.id;
     const commentId = req.params.comment;
 
-    Activity.findOneAndUpdate({ _id: id }, { $pull: { comments: { _id: commentId }}}, { new: true }, (err, result) => {
-      if(err){
-        res.send(err);
-      }
-      res.json(result);
+    Activity.findOneAndUpdate(
+      { _id: id },
+      { $pull: { comments: { _id: commentId }}},
+      { new: true },
+      async (err, activity) => {
+        if(err){
+          res.send(err);
+        }
+
+        const comments = await this.getCommentsWithUsers(activity.comments);
+        res.json(comments);
     });
   }
 
@@ -226,6 +219,26 @@ export default class ActivityController {
       const likes = await this.getLikesWithUsers(activity.likes);
       res.json(likes);
     });
+  }
+
+  private async getCommentsWithUsers(activityComments) {
+    const comments: IComment[] = [];
+    for (let comment of activityComments) {
+      try {
+        const user: IUser = await this.getUser(comment.createdBy);
+        const result: IComment = {
+          _id: comment._id,
+          text: comment.text,
+          createdAt: comment.createdAt,
+          createdBy: user
+        };
+
+        comments.push(result);
+      } catch (error) {
+        console.log('[ERROR] - ActivityController :: getCommentsWithUsers', error);
+      }
+    }
+    return comments;
   }
 
   private async getLikesWithUsers(likes) {
