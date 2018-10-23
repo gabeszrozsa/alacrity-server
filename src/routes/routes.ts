@@ -69,5 +69,8 @@ export class Routes {
       app.post('/api/activity/:id/comment', this.userCtrl.authenticate, this.activityCtrl.addComment);
       app.get('/api/activity/:id/comment', this.userCtrl.authenticate, this.activityCtrl.getComments);
       app.delete('/api/activity/:id/comment/:comment', this.userCtrl.authenticate, this.activityCtrl.deleteComment);
+	    app.post('/api/activity/:id/like', this.userCtrl.authenticate, this.activityCtrl.addLike);
+      app.get('/api/activity/:id/like', this.userCtrl.authenticate, this.activityCtrl.getLikes);
+      app.delete('/api/activity/:id/like/:like', this.userCtrl.authenticate, this.activityCtrl.deleteLike);
     }
 }

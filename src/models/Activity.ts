@@ -40,7 +40,13 @@ const ActivitySchema = new Schema({
       default: []
   },
   likes: {
-    type: [Schema.Types.ObjectId],
+    type: [{
+      createdBy: Schema.Types.ObjectId,
+      createdAt: {
+          type: Date,
+          default: Date.now
+      },
+    }],
     default: []
   },
   createdBy: {

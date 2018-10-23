@@ -11,7 +11,12 @@ export default class ActivityController {
     this.getActivity = this.getActivity.bind(this);
     this.getAllActivities = this.getAllActivities.bind(this);
     this.getComments = this.getComments.bind(this);
+    this.addComment = this.addComment.bind(this);
+    this.deleteComment = this.deleteComment.bind(this);
     this.getLikes = this.getLikes.bind(this);
+    this.addLike = this.addLike.bind(this);
+    this.deleteLike = this.deleteLike.bind(this);
+    this.getLikesWithUsers = this.getLikesWithUsers.bind(this);
   }
 
   public addNewActivity(req: Request, res: Response) {
@@ -171,14 +176,20 @@ export default class ActivityController {
   }
 
   public addLike(req: Request, res: Response) {
-    const id = req.params.id;
+    const _id = req.params.id;
+    const createdBy = req.body.user._id;
+    const like = { createdBy };
 
-    Activity.findOneAndUpdate({ _id: id }, { $addToSet: {likes: {createdBy: req.body.user._id }}},
-      { new: true }, (err, result) => {
-        if(err){
-          res.send(err);
-        }
-        res.json(result);
+    Activity.findOneAndUpdate(
+      { _id, 'likes.createdBy': { $ne: createdBy } },
+      { $addToSet: {likes: like}},
+      { new: true },
+      async (err, activity) => {
+        if (err) { res.send(err) }
+        if (!activity) { res.status(404).send() }
+
+        const likes = await this.getLikesWithUsers(activity.likes);
+        res.json(likes);
     });
   }
 
@@ -194,36 +205,46 @@ export default class ActivityController {
           res.status(404).send();
       }
 
-      const likes: ILike[] = [];
-      for (let like of activity.likes) {
-        try {
-          const user: IUser = await this.getUser(like.createdBy);
-          const result: ILike = {
-            _id: like._id,
-            createdAt: like.createdAt,
-            createdBy: user
-          };
-
-          likes.push(result);
-        } catch (error) {
-          console.log('[ERROR] - ActivityController :: getLikes', error);
-        }
-      }
+      const likes = await this.getLikesWithUsers(activity.likes);
 
       res.json(likes);
     });
   }
 
   public deleteLike(req: Request, res: Response) {
-    const id = req.params.id;
+    const _id = req.params.id;
     const likeId = req.params.like;
 
-    Activity.findOneAndUpdate({ _id: id }, { $pull: { likes: { _id: likeId }}}, { new: true }, (err, result) => {
-      if(err){
-        res.send(err);
-      }
-      res.json(result);
+    Activity.findOneAndUpdate(
+      { _id },
+      { $pull: { likes: { _id: likeId } } },
+      { new: true },
+      async (err, activity) => {
+        if (err) { res.send(err) }
+        if (!activity) { res.status(404).send() }
+
+      const likes = await this.getLikesWithUsers(activity.likes);
+      res.json(likes);
     });
+  }
+
+  private async getLikesWithUsers(likes) {
+    const data: ILike[] = [];
+    for (let like of likes) {
+      try {
+        const user: IUser = await this.getUser(like.createdBy);
+        const result: ILike = {
+          _id: like._id,
+          createdAt: like.createdAt,
+          createdBy: user
+        };
+
+        data.push(result);
+      } catch (error) {
+        console.log('[ERROR] - ActivityController :: getLikesWithUsers', error);
+      }
+    }
+    return data;
   }
 
   private createActivity(activity: IActivity, location: ILocation, activityType: IActivityType): IActivity {
