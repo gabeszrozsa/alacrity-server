@@ -7,6 +7,7 @@ export default class UserController {
     const newUser = new User({
       email: req.body.email,
       password: req.body.password,
+      displayName: req.body.displayName
     });
 
     newUser.save()

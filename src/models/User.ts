@@ -17,6 +17,12 @@ const UserSchema = new Schema({
       message: '{VALUE} is not a valid email'
     }
   },
+  displayName: {
+    type: String,
+    required: [true, 'Enter a first name'],
+    trim: true,
+    minlength: 1
+  },
   password: {
     type: String,
     require: [true, 'Enter a password'],
