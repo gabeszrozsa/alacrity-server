@@ -4,7 +4,7 @@ interface IBaseEntity {
   createdAt: Date
 }
 
-export interface ILike extends IBaseEntity {
+export interface ILike {
   _id: string,
   createdAt: Date,
   createdBy: IUser
@@ -12,7 +12,8 @@ export interface ILike extends IBaseEntity {
 
 export interface IUser {
   _id: string,
-  email: string
+  email: string,
+  displayName: string
 }
 
 export interface IActivityType extends IBaseEntity {

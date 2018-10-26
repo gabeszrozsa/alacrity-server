@@ -292,7 +292,7 @@ export default class ActivityController {
         if (!result){
             reject(`No User with ID: ${user_id}`);
         }
-        resolve({ _id: result._id, email: result.email });
+        resolve({ _id: result._id, email: result.email, displayName: result.displayName });
       });
     });
   }
