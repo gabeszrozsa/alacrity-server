@@ -58,6 +58,8 @@ export class Routes {
       app.delete('/api/event/:id', this.userCtrl.authenticate, this.eventCtrl.deleteEvent);
       app.patch('/api/event/:id', this.userCtrl.authenticate, this.eventCtrl.updateEvent);
       app.post('/api/event/:id/invite', this.userCtrl.authenticate, this.eventCtrl.inviteUsers);
+      app.get('/api/event/:id/attendees', this.userCtrl.authenticate, this.eventCtrl.getAttendees);
+      app.post('/api/event/:id/cancel', this.userCtrl.authenticate, this.eventCtrl.cancelEvent);
     }
 
     public setActivityRoutes(app): void {
