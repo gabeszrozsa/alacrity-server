@@ -9,8 +9,39 @@ const LocationSchema = new Schema({
     minlength: 1
   },
   coordinates: {
-    type: String,
-    default: ''
+    type: {
+      center: {
+          type: {
+            lat: {
+              type: Number,
+              required: [true, 'Add center lat']
+            },
+            lng: {
+              type: Number,
+              required: [true, 'Add center lng']
+            }
+          },
+          required: [true, 'Add center']
+      },
+      routeCoords: {
+        type: [{
+          lat: {
+            type: Number,
+            required: [true, 'Add route lat']
+          },
+          lng: {
+            type: Number,
+            required: [true, 'Add route lng']
+          }
+        }],
+        default: []
+      },
+      zoom: {
+        type: Number,
+        default: 15
+      }
+    },
+    default: null
   },
   createdBy: {
     type: Schema.Types.ObjectId,

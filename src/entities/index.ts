@@ -27,6 +27,17 @@ export interface IComment {
   createdBy: IUser
 }
 
+export interface ILatLng {
+  lat: number,
+  lng: number
+}
+
+export interface ICoordinates {
+  center: ILatLng,
+  routeCoords: ILatLng[],
+  zoom: number
+}
+
 export interface ILocation extends IBaseEntity {
   name: string,
   coordinates: string
