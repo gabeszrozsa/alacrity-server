@@ -12,14 +12,34 @@ export default class UserController {
 
     newUser.save()
       .then(() => newUser.generateAuthToken())
-      .then(token => res.header('x-auth', token).send(newUser))
+      .then(token => {
+        const { _id, displayName, email } = newUser;
+        const user = { _id, displayName, email, token };
+
+        res.header('x-auth', token).send(user);
+      })
       .catch(error => res.status(400).send(error));
+  }
+
+  public getAllUsers(req: Request, res: Response) {
+    User.find({}, (err, result) => {
+      if(err){
+          res.send(err);
+      }
+
+      const users = result.map(u => ({ _id: u._id, displayName: u.displayName, email: u.email }));
+      res.json(users);
+    });
   }
 
   public loginWithUser(req: Request, res: Response) {
     User.findByCredentials(req.body.email, req.body.password)
       .then(user => user.generateAuthToken()
-        .then(token => res.header('x-auth', token).send(user))
+        .then(token => {
+          const { _id, displayName, email } = user;
+          const currentUser = { _id, displayName, email, token };
+          res.header('x-auth', token).send(currentUser)
+        })
       )
       .catch(e => res.status(400).send());
   }
