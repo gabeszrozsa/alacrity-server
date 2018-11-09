@@ -4,6 +4,7 @@ import LocationController from "../controllers/LocationController";
 import ActivityTypeController from "../controllers/ActivityTypeController";
 import EventController from "../controllers/EventController";
 import ActivityController from "../controllers/ActivityController";
+import MessageController from "../controllers/MessageController";
 
 export class Routes {
     public userCtrl: UserController = new UserController();
@@ -11,6 +12,7 @@ export class Routes {
     public activityTypeCtrl: ActivityTypeController = new ActivityTypeController();
     public eventCtrl: EventController = new EventController();
     public activityCtrl: ActivityController = new ActivityController();
+    public messageCtrl: MessageController = new MessageController();
 
     public routes(app): void {
         app.route('/')
@@ -25,6 +27,7 @@ export class Routes {
         this.setActivityTypeRoutes(app);
         this.setEventRoutes(app);
         this.setActivityRoutes(app);
+        this.setMessageRoutes(app);
     }
 
     public setUserRoutes(app): void {
@@ -75,5 +78,11 @@ export class Routes {
 	    app.post('/api/activity/:id/like', this.userCtrl.authenticate, this.activityCtrl.addLike);
       app.get('/api/activity/:id/like', this.userCtrl.authenticate, this.activityCtrl.getLikes);
       app.delete('/api/activity/:id/like/:like', this.userCtrl.authenticate, this.activityCtrl.deleteLike);
+    }
+
+    public setMessageRoutes(app): void {
+      app.get('/api/messages', this.userCtrl.authenticate, this.messageCtrl.getMyMessages);
+      app.post('/api/messages', this.userCtrl.authenticate, this.messageCtrl.sendMessage);
+      app.delete('/api/messages/:id', this.userCtrl.authenticate, this.messageCtrl.deleteMessage);
     }
 }
