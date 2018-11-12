@@ -1,11 +1,16 @@
 import { Request, Response, NextFunction } from 'express';
 import Message from '../models/Message';
+import User from '../models/User';
+import { IUser } from '../entities/';
+import { resolve } from 'path';
 
 export default class MessageController {
   constructor() {
     this.getMyMessages = this.getMyMessages.bind(this);
     this.sendMessage = this.sendMessage.bind(this);
     this.deleteMessage = this.deleteMessage.bind(this);
+    this.fetchMyMessages = this.fetchMyMessages.bind(this);
+    this.getMessagesWithUsers = this.getMessagesWithUsers.bind(this);
   }
 
   public sendMessage(req: Request, res: Response) {
@@ -52,11 +57,52 @@ export default class MessageController {
 
   public fetchMyMessages(currentUser) {
     return Promise.all([
-      Message.find({ 'createdBy': currentUser}),
-      Message.find({ 'recipient_id': currentUser})
+      Message.find({ 'createdBy': currentUser})
+        .then(async res => {
+          const messagesWithUsers = await this.getMessagesWithUsers(res, 'recipient_id');
+          return messagesWithUsers;
+        }),
+        Message.find({ 'recipient_id': currentUser})
+        .then(async res => {
+          const messagesWithUsers = await this.getMessagesWithUsers(res, 'createdBy');
+          return messagesWithUsers;
+        })
     ])
-      .then(result => ({ sent: result[0], received: result[1] }))
+      .then(result => ({ sent: result[0], received: result[1]}))
       .catch(error => error)
+  }
+
+  private async getMessagesWithUsers(messagesData, targetUser) {
+    const messages = [];
+    for (let msg of messagesData) {
+      try {
+        const partner: IUser = await this.getUser(msg[targetUser]);
+        const result = {
+          _id: msg._id,
+          text: msg.text,
+          createdAt: msg.createdAt,
+          createdBy: msg.createdBy,
+          recipient_id: msg.recipient_id,
+          partner: partner
+        };
+
+        messages.push(result);
+      } catch (error) {
+        console.log('[ERROR] - MessageController :: getMessagesWithUsers', error);
+      }
+    }
+    return messages;
+  }
+
+  private getUser(user_id: string) {
+    return new Promise<IUser>((resolve, reject) => {
+      User.findById(user_id).then(result => {
+        if (!result){
+            reject(`No User with ID: ${user_id}`);
+        }
+        resolve({ _id: result._id, email: result.email, displayName: result.displayName });
+      });
+    });
   }
 
 }

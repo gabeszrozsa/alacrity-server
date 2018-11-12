@@ -161,7 +161,7 @@ export default class EventController {
         const user: IUser = await this.getUser(attendee);
         attendees.push(user);
       } catch (error) {
-        console.log('[ERROR] - EventController :: getAttendees', error);
+        console.log('[ERROR] - EventController :: getAttendees', attendee, error);
       }
     }
     return attendees
