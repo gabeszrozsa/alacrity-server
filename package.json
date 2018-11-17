@@ -5,14 +5,17 @@
   "main": "index.js",
   "scripts": {
     "start": "ts-node src/server.ts",
-    "dev": "node ./node_modules/nodemon/bin/nodemon.js",
-    "build": "tsc",
-    "prod": "npm run build && npm run start"
+    "server-dev": "node ./node_modules/nodemon/bin/nodemon.js",
+    "server-build": "tsc",
+    "server-prod": "npm run build && npm run start",
+    "client-start": "cd client && npm start",
+    "dev": "concurrently --kill-others-on-fail \"npm run server-dev\" \"npm run client-start\""
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "concurrently": "^4.0.1",
     "ts-node": "^7.0.1",
     "typescript": "^3.0.3"
   },
