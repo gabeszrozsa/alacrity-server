@@ -29,24 +29,26 @@ export default class EventController {
   }
 
   public getAllEvents(req: Request, res: Response) {
-    Event.find({}, async (err, events) => {
-      if (err) {
-          res.send(err);
-      }
-
-      const results: IEvent[] = [];
-      for (let event of events) {
-        try {
-          const location = await this.getLocationForEvent(event.location_id);
-          const result = this.mapEventWithLocation(event, location);
-          results.push(result);
-        } catch (error) {
-          console.log('[ERROR] - EventController :: getAllEvents');
+    Event
+      .find()
+      .sort('date')
+      .exec()
+      .then(async (events) => {
+        const results: IEvent[] = [];
+        for (let event of events) {
+          try {
+            const location = await this.getLocationForEvent(event.location_id);
+            const result = this.mapEventWithLocation(event, location);
+            results.push(result);
+          } catch (error) {
+            console.log('[ERROR] - EventController :: getAllEvents', event._id);
+            console.log('[ERROR] No location with ID', event.location_id);
+          }
         }
-      }
 
-      res.json(results);
-    });
+        res.json(results);
+    })
+    .catch(error => res.send(error));
   }
 
   public getEvent(req: Request, res: Response) {
