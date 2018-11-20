@@ -3,11 +3,12 @@ import * as bodyParser from "body-parser";
 import * as mongoose from "mongoose";
 import * as cors from "cors";
 import { Routes } from "./routes/routes";
+import config from './config';
 
 class App {
   public app: express.Application;
   public route: Routes = new Routes();
-  public mongoUrl: string = 'mongodb://localhost/Astro';
+  public mongoUrl: string = config.MONGO_URL;
 
   constructor() {
     this.app = express();

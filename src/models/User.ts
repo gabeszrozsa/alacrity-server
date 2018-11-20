@@ -2,6 +2,7 @@ import * as mongoose from 'mongoose';
 import * as validator from 'validator';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcryptjs';
+import config from '../config'
 
 const Schema = mongoose.Schema;
 
@@ -25,7 +26,7 @@ const UserSchema = new Schema({
   },
   password: {
     type: String,
-    require: [true, 'Enter a password'],
+    required: [true, 'Enter a password'],
     minlength: 6
   },
   tokens: [{
@@ -44,7 +45,7 @@ UserSchema.methods.generateAuthToken = function() {
   const user = this;
   const access = 'auth';
   const token = jwt
-    .sign({_id: user._id.toHexString(), access }, 'secret')
+    .sign({_id: user._id.toHexString(), access }, config.JWT_SECRET)
     .toString();
 
   user.tokens.push({ access, token });
@@ -78,7 +79,7 @@ UserSchema.statics.findByToken = function(token) {
   var decoded;
 
   try {
-    decoded = jwt.verify(token, 'secret');
+    decoded = jwt.verify(token, config.JWT_SECRET);
   } catch (e) {
     return Promise.reject();
   }

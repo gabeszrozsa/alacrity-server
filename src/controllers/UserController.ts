@@ -58,10 +58,7 @@ export default class UserController {
         req.body.token = token;
         next();
       })
-      .catch(error => {
-        console.log('error', error)
-        res.status(401).send();
-      });
+      .catch(error => res.status(401).send());
   }
 
 }

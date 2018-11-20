@@ -4,18 +4,28 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/server.ts",
+    "start": "node dist/server.js",
+    "server-start": "ts-node src/server.ts",
     "server-dev": "node ./node_modules/nodemon/bin/nodemon.js",
     "server-build": "tsc",
     "server-prod": "npm run build && npm run start",
+    "server-test": "mocha --require ts-node/register test/**/*.ts",
     "client-start": "cd client && npm start",
     "dev": "concurrently --kill-others-on-fail \"npm run server-dev\" \"npm run client-start\""
+  },
+  "engines": {
+    "node": "8.11.4"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/chai": "^4.1.7",
+    "@types/mocha": "^5.2.5",
+    "chai": "^4.2.0",
     "concurrently": "^4.0.1",
+    "mocha": "^5.2.0",
+    "supertest": "^3.3.0",
     "ts-node": "^7.0.1",
     "typescript": "^3.0.3"
   },

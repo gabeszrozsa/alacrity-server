@@ -33,9 +33,10 @@ export class Routes {
     public setUserRoutes(app): void {
       app.post('/api/users/new', this.userCtrl.addNewUser);
       app.post('/api/users/login', this.userCtrl.loginWithUser);
-      app.get('/api/users/all', this.userCtrl.getAllUsers);
+      app.get('/api/users/all', this.userCtrl.authenticate, this.userCtrl.getAllUsers);
       app.get('/api/users/current', this.userCtrl.authenticate, (req, res) => {
-        res.send(req.body.user);
+        const { _id, email, displayName } = req.body.user;
+        res.send({ _id, email, displayName });
       });
     }
 
