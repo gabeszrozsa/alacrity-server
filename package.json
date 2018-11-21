@@ -2,7 +2,7 @@
   "name": "astro-server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/server.js",
   "scripts": {
     "start": "node dist/server.js",
     "server-start": "ts-node src/server.ts",
@@ -11,6 +11,7 @@
     "server-prod": "npm run build && npm run start",
     "server-test": "mocha --require ts-node/register test/**/*.ts",
     "client-start": "cd client && npm start",
+	"postinstall": "npm run server-build",
     "dev": "concurrently --kill-others-on-fail \"npm run server-dev\" \"npm run client-start\""
   },
   "engines": {
