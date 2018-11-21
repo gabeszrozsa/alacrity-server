@@ -1,4 +1,5 @@
-import {Request, Response} from "express";
+import * as express from "express";
+import * as path from "path";
 import UserController from "../controllers/UserController";
 import LocationController from "../controllers/LocationController";
 import ActivityTypeController from "../controllers/ActivityTypeController";
@@ -15,19 +16,21 @@ export class Routes {
     public messageCtrl: MessageController = new MessageController();
 
     public routes(app): void {
-        app.route('/')
-        .get((req: Request, res: Response) => {
-            res.status(200).send({
-                message: 'GET request successfulll!!!!'
-            })
-        });
+      this.setUserRoutes(app);
+      this.setLocationRoutes(app);
+      this.setActivityTypeRoutes(app);
+      this.setEventRoutes(app);
+      this.setActivityRoutes(app);
+      this.setMessageRoutes(app);
 
-        this.setUserRoutes(app);
-        this.setLocationRoutes(app);
-        this.setActivityTypeRoutes(app);
-        this.setEventRoutes(app);
-        this.setActivityRoutes(app);
-        this.setMessageRoutes(app);
+      if (process.env.NODE_ENV === 'production') {
+        // Serve static files from the React frontend app
+        app.use(express.static(path.join(__dirname, 'client/build')));
+        // Anything that doesn't match the above, send back index.html
+        app.get('*', (req, res) => {
+          res.sendFile(path.join(__dirname + '/client/build/index.html'));
+        })
+      }
     }
 
     public setUserRoutes(app): void {
