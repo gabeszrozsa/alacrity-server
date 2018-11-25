@@ -43,6 +43,7 @@ export default class EventController {
           } catch (error) {
             console.log('[ERROR] - EventController :: getAllEvents', event._id);
             console.log('[ERROR] No location with ID', event.location_id);
+            res.status(400).send(error);
           }
         }
 
@@ -67,7 +68,11 @@ export default class EventController {
           const result = this.mapEventWithLocation(event, location);
           res.json(result);
         })
-        .catch(error => console.log('[ERROR] - EventController :: getEvent'));
+        .catch(error => {
+          console.log('[ERROR] - EventController :: getEvent', event._id);
+          console.log('[ERROR] No location with ID', event.location_id);
+          res.status(400).send(error);
+        });
     });
   }
 
@@ -87,6 +92,12 @@ export default class EventController {
   }
 
   public updateEvent(req: Request, res: Response) {
+    const id = req.params.id;
+
+    if (!Event.validateID(id)) {
+        return res.status(404).send();
+    }
+
     Event.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, (err, result) => {
       if(err){
         res.send(err);
@@ -97,6 +108,11 @@ export default class EventController {
 
   public inviteUsers(req: Request, res: Response) {
     const id = req.params.id;
+
+    if (!Event.validateID(id)) {
+        return res.status(404).send();
+    }
+
     const attendees = req.body.attendees;
 
     Event.findOneAndUpdate({ _id: id }, { $addToSet: {attendees: attendees }},
@@ -129,6 +145,11 @@ export default class EventController {
 
   public cancelEvent(req: Request, res: Response) {
     const _id = req.params.id;
+
+    if (!Event.validateID(_id)) {
+      return res.status(404).send();
+    }
+
     const attendee = req.body.attendee;
 
     Event.findOneAndUpdate(
