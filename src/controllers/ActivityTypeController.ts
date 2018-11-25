@@ -54,6 +54,12 @@ export default class ActivityTypeController {
   }
 
   public updateActivityType(req: Request, res: Response) {
+    const id = req.params.id;
+
+    if (!ActivityType.validateID(id)) {
+        return res.status(404).send();
+    }
+    
     ActivityType.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, (err, result) => {
       if(err){
         res.send(err);

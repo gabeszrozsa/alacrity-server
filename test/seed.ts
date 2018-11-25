@@ -1,6 +1,6 @@
 import * as jwt from 'jsonwebtoken';
 import { ObjectID } from 'mongodb';
-import { User, Location } from '../src/models/index';
+import { User, Location, ActivityType } from '../src/models/index';
 
 const userOneId = new ObjectID();
 const token = jwt.sign({_id: userOneId, access: 'auth'}, process.env.JWT_SECRET).toString();
@@ -109,7 +109,24 @@ const populateLocations = () => {
   return clearLocations().then(() => new Location(newLocation).save());
 }
 
+const activityTypeID = new ObjectID();
+const activityType = {
+  _id: activityTypeID,
+  name: "activity type",
+  createdBy: userOneId,
+  createdAt: new Date()
+};
+
+const clearActivityTypes = () => {
+  return ActivityType.remove({})
+}
+
+const populateActivityTypes = () => {
+  return clearActivityTypes().then(() => new ActivityType(activityType).save());
+}
+
 export { 
   populateUsers, token, newUser,
   clearLocations, populateLocations, newLocation,
+  clearActivityTypes, populateActivityTypes, activityType,
 };
