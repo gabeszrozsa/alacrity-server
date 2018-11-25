@@ -46,11 +46,10 @@ export default class UserController {
 
   public authenticate(req: Request, res: Response, next: NextFunction) {
     const token = req.header('x-auth');
-
     User.findByToken(token)
       .then(user => {
         if (!user) {
-          console.log('no user')
+          console.log('[ERROR] UserController -> authenticate: no user with token', token);
           return Promise.reject();
         }
 
