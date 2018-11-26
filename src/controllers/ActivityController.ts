@@ -107,6 +107,12 @@ export default class ActivityController {
   }
 
   public updateActivity(req: Request, res: Response) {
+    const id = req.params.id;
+
+    if (!Activity.validateID(id)) {
+        return res.status(404).send();
+    }
+    
     Activity.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, (err, result) => {
       if(err){
         res.send(err);
