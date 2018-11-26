@@ -1,6 +1,6 @@
 import * as jwt from 'jsonwebtoken';
 import { ObjectID } from 'mongodb';
-import { User, Location, ActivityType, Event } from '../src/models/index';
+import { User, Location, ActivityType, Event, Message } from '../src/models/index';
 
 const userOneId = new ObjectID();
 const token = jwt.sign({_id: userOneId, access: 'auth'}, process.env.JWT_SECRET).toString();
@@ -15,13 +15,25 @@ const newUser = {
   }]
 };
 
+const userTwoId = new ObjectID();
+const anotherToken = jwt.sign({_id: userTwoId, access: 'auth'}, process.env.JWT_SECRET).toString();
+const anotherUser = {
+  _id: userTwoId,
+  email: 'arrow@email.com',
+  password:'userTwoPass',
+  displayName: 'Oliver Queen',
+  tokens: [{
+    access: 'auth',
+    token: anotherToken
+  }]
+};
+
 const populateUsers = function(done) {
   this.timeout(0);
   User.remove({})
     .then(() => { new User(newUser).save() })
-      .then(() => { done() })
-      .catch(error => console.log('populateUsers -> save', error))
-    .catch(error => console.log('populateUsers -> remove', error))
+    .then(() => { new User(anotherUser).save() })
+    .then(() => { done() })
 };
 
 const locId = new ObjectID();
@@ -148,9 +160,27 @@ const populateEvents = () => {
     )
 }
 
+const messageID = new ObjectID();
+const message = {
+  _id: messageID,
+  text: "message",
+  recipient_id: userTwoId,
+  createdBy: userOneId,
+  createdAt: new Date()
+};
+
+const clearMessages = () => {
+  return Message.remove({})
+}
+
+const populateMessages = () => {
+  return clearMessages().then(() => new Message(message).save());
+}
+
 export { 
-  populateUsers, token, newUser,
+  populateUsers, token, newUser, anotherUser, anotherToken,
   clearLocations, populateLocations, newLocation,
   clearActivityTypes, populateActivityTypes, activityType,
   clearEvents, populateEvents, evt,
+  clearMessages, populateMessages, message,
 };
