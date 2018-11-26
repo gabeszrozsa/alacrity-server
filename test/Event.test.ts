@@ -68,35 +68,6 @@ describe('Event', function() {
     it('should send Unauthorized error without auth token', function(done) {
       this.timeout(0);
       request(app)
-        .get('/api/event/' + evt._id)
-        .expect(401)
-        .end(done);
-    });
-  });
-  
-  describe('GET /api/event/:id', function() {
-    it('should get a specific event', function(done) {
-      this.timeout(0);
-  
-      populateEvents().then(() => {
-        request(app)
-          .get('/api/event/' + evt._id)
-          .set('x-auth', token)
-          .expect(200)
-          .expect(res => {
-            expect(res.body._id).to.exist;
-            expect(res.body.createdAt).to.exist;
-            expect(res.body.createdBy).to.exist;
-            expect(res.body.name).to.equal(evt.name);
-          })
-          .end(done);
-      })
-  
-    });
-  
-    it('should send Unauthorized error without auth token', function(done) {
-      this.timeout(0);
-      request(app)
         .get('/api/event/')
         .expect(401)
         .end(done);

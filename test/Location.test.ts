@@ -70,36 +70,6 @@ describe('Location', function() {
     it('should send Unauthorized error without auth token', function(done) {
       this.timeout(0);
       request(app)
-        .get('/api/location/' + newLocation._id)
-        .expect(401)
-        .end(done);
-    });
-  });
-  
-  describe('GET /api/location/:id', function() {
-    it('should get a specific location', function(done) {
-      this.timeout(0);
-  
-      populateLocations().then(() => {
-        request(app)
-          .get('/api/location/' + newLocation._id)
-          .set('x-auth', token)
-          .expect(200)
-          .expect(res => {
-            expect(res.body._id).to.exist;
-            expect(res.body.createdAt).to.exist;
-            expect(res.body.createdBy).to.exist;
-            expect(res.body.name).to.equal(newLocation.name);
-            expect(res.body.coordinates).to.deep.equal(newLocation.coordinates);
-          })
-          .end(done);
-      })
-  
-    });
-  
-    it('should send Unauthorized error without auth token', function(done) {
-      this.timeout(0);
-      request(app)
         .get('/api/location/')
         .expect(401)
         .end(done);

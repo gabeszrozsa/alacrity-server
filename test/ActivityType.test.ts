@@ -68,35 +68,6 @@ describe('Activity Type', function() {
     it('should send Unauthorized error without auth token', function(done) {
       this.timeout(0);
       request(app)
-        .get('/api/activity-type/' + activityType._id)
-        .expect(401)
-        .end(done);
-    });
-  });
-  
-  describe('GET /api/activity-type/:id', function() {
-    it('should get a specific activity type', function(done) {
-      this.timeout(0);
-  
-      populateActivityTypes().then(() => {
-        request(app)
-          .get('/api/activity-type/' + activityType._id)
-          .set('x-auth', token)
-          .expect(200)
-          .expect(res => {
-            expect(res.body._id).to.exist;
-            expect(res.body.createdAt).to.exist;
-            expect(res.body.createdBy).to.exist;
-            expect(res.body.name).to.equal(activityType.name);
-          })
-          .end(done);
-      })
-  
-    });
-  
-    it('should send Unauthorized error without auth token', function(done) {
-      this.timeout(0);
-      request(app)
         .get('/api/activity-type/')
         .expect(401)
         .end(done);
