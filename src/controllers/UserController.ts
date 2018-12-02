@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import User from '../models/User';
+import { ICurrentUser, IUser } from 'entities';
 
 export default class UserController {
   public logOut(req: Request, res: Response) {
@@ -12,8 +13,9 @@ export default class UserController {
   }
 
   public getCurrent(req: Request, res: Response) {
-    const { _id, email, displayName } = req.body.user;
-    res.send({ _id, email, displayName });
+    const { _id, email, displayName, token } = req.body.user;
+    const currentUser: ICurrentUser = { _id, email, displayName, token };
+    res.send(currentUser);
   }
 
   public addNewUser(req: Request, res: Response) {
@@ -27,7 +29,7 @@ export default class UserController {
       .then(() => newUser.generateAuthToken())
       .then(token => {
         const { _id, displayName, email } = newUser;
-        const user = { _id, displayName, email, token };
+        const user: ICurrentUser = { _id, displayName, email, token };
 
         res.header('x-auth', token).send(user);
       })
@@ -40,7 +42,7 @@ export default class UserController {
           res.send(err);
       }
 
-      const users = result.map(u => ({ _id: u._id, displayName: u.displayName, email: u.email }));
+      const users = result.map(u => (<IUser>{ _id: u._id, displayName: u.displayName, email: u.email }));
       res.json(users);
     });
   }
@@ -50,7 +52,7 @@ export default class UserController {
       .then(user => user.generateAuthToken()
         .then(token => {
           const { _id, displayName, email } = user;
-          const currentUser = { _id, displayName, email, token };
+          const currentUser: ICurrentUser = { _id, displayName, email, token };
           res.header('x-auth', token).send(currentUser)
         })
       )

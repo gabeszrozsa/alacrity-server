@@ -10,10 +10,23 @@ export interface ILike {
   createdBy: IUser
 }
 
+export interface ILoginUser {
+  email: string,
+  password: string
+}
+
+export interface IRegisterUser extends ILocation {
+  displayName: string,
+}
+
 export interface IUser {
   _id: string,
   email: string,
   displayName: string
+}
+
+export interface ICurrentUser extends IUser {
+  token: string;
 }
 
 export interface IActivityType extends IBaseEntity {
