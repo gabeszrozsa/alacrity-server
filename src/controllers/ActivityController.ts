@@ -36,7 +36,9 @@ export default class ActivityController {
   }
 
   public getAllActivities(req: Request, res: Response) {
-    Activity.find({}, async (err, activities) => {
+    const currentUser = req.body.user._id;
+    
+    Activity.find({ createdBy: currentUser }, async (err, activities) => {
       if (err) {
           res.send(err);
       }
