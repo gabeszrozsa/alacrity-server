@@ -2,6 +2,19 @@ import { Request, Response, NextFunction } from 'express';
 import User from '../models/User';
 
 export default class UserController {
+  public logOut(req: Request, res: Response) {
+    req.body.user.removeToken(req.body.token)
+    .then(() => {
+      res.status(200).send();
+    }, () => {
+      res.status(400).send();
+    });
+  }
+
+  public getCurrent(req: Request, res: Response) {
+    const { _id, email, displayName } = req.body.user;
+    res.send({ _id, email, displayName });
+  }
 
   public addNewUser(req: Request, res: Response) {
     const newUser = new User({
