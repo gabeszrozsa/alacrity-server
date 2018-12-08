@@ -1,13 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import ActivityType from '../models/ActivityType';
+import { IActivityTypeCreate, IActivityTypeView } from 'entities/activity-type';
 
 export default class ActivityTypeController {
 
   public addNewActivityType(req: Request, res: Response) {
-    const newActivityType = new ActivityType({
+    const activityTypeCreate: IActivityTypeCreate = {
       name: req.body.name,
       createdBy: req.body.user._id
-    });
+    };
+    const newActivityType = new ActivityType(activityTypeCreate);
 
     newActivityType.save()
       .then(token => res.send(newActivityType._id))
@@ -15,7 +17,7 @@ export default class ActivityTypeController {
   }
 
   public getAllActivityTypes(req: Request, res: Response) {
-    ActivityType.find({}, (err, result) => {
+    ActivityType.find({}, (err, result: IActivityTypeView) => {
       if(err){
           res.send(err);
       }
@@ -30,7 +32,7 @@ export default class ActivityTypeController {
         return res.status(404).send();
     }
 
-    ActivityType.findById(id).then(result => {
+    ActivityType.findById(id).then((result: IActivityTypeView) => {
       if(!result){
           res.status(404).send();
       }
@@ -49,7 +51,7 @@ export default class ActivityTypeController {
       if(err){
         res.send(err);
       }
-      res.json({ message: 'Successfully deleted activity type!'});
+      res.status(200).send();
     });
   }
 
@@ -60,7 +62,7 @@ export default class ActivityTypeController {
         return res.status(404).send();
     }
     
-    ActivityType.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, (err, result) => {
+    ActivityType.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, (err, result: IActivityTypeView) => {
       if(err){
         res.send(err);
       }

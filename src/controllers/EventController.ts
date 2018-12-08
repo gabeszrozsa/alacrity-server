@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import Event from '../models/Event';
 import User from '../models/User';
 import Location from '../models/Location';
-import { IEvent, ILocation, IUser } from '../entities/';
+import { IEventCreate, IEventView, ILocationView, IUser } from '../entities/';
 
 export default class EventController {
   constructor() {
@@ -15,13 +15,13 @@ export default class EventController {
   }
 
   public addNewEvent(req: Request, res: Response) {
-    const newEvent = new Event({
+    const eventCreate: IEventCreate = {
       name: req.body.name,
       date: req.body.date,
       location_id: req.body.location_id,
-      attendees: req.body.attendees,
       createdBy: req.body.user._id
-    });
+    };
+    const newEvent = new Event(eventCreate);
 
     newEvent.save()
       .then(token => res.send(newEvent._id))
@@ -34,7 +34,7 @@ export default class EventController {
       .sort('date')
       .exec()
       .then(async (events) => {
-        const results: IEvent[] = [];
+        const results: IEventView[] = [];
         for (let event of events) {
           try {
             const location = await this.getLocationForEvent(event.location_id);
@@ -87,7 +87,7 @@ export default class EventController {
       if(err){
         res.send(err);
       }
-      res.json({ message: 'Successfully deleted event!'});
+      res.status(200).send();
     });
   }
 
@@ -165,8 +165,8 @@ export default class EventController {
     });
   }
 
-  private mapEventWithLocation(event: IEvent, location: ILocation): IEvent {
-    return <IEvent>{
+  private mapEventWithLocation(event: IEventView, location: ILocationView): IEventView {
+    return <IEventView>{
       _id: event._id,
       name: event.name,
       attendees: event.attendees,
@@ -201,7 +201,7 @@ export default class EventController {
   }
 
   private getLocationForEvent(location_id: string) {
-    return new Promise<ILocation>((resolve, reject) => {
+    return new Promise<ILocationView>((resolve, reject) => {
       Location.findById(location_id).then(result => {
         if (!result){
             reject(`No Location with ID: ${location_id}`);

@@ -1,14 +1,17 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 import Location from '../models/Location';
+import { ILocationCreate, ILocationView } from '../entities';
 
 export default class LocationController {
 
   public addNewLocation(req: Request, res: Response) {
-    const newLocation = new Location({
+    const locationCreate: ILocationCreate = {
       name: req.body.name,
       coordinates: req.body.coordinates,
       createdBy: req.body.user._id
-    });
+    };
+
+    const newLocation = new Location(locationCreate);
 
     newLocation.save()
       .then(token => res.send(newLocation._id))
@@ -16,7 +19,7 @@ export default class LocationController {
   }
 
   public getAllLocations(req: Request, res: Response) {
-    Location.find({}, (err, result) => {
+    Location.find({}, (err, result: ILocationView[]) => {
       if(err){
           res.send(err);
       }
@@ -31,7 +34,7 @@ export default class LocationController {
         return res.status(404).send();
     }
 
-    Location.findById(id).then(result => {
+    Location.findById(id).then((result: ILocationView) => {
       if(!result){
           res.status(404).send();
       }
@@ -50,7 +53,7 @@ export default class LocationController {
       if(err){
         res.send(err);
       }
-      res.json({ message: 'Successfully deleted location!'});
+      res.status(200).send();
     });
   }
 

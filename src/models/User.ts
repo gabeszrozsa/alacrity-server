@@ -62,7 +62,8 @@ UserSchema.methods.removeToken = function(token) {
   });
 }
 
-UserSchema.statics.findByCredentials = function(email, password) {
+UserSchema.statics.findByCredentials = function(credentials) {
+  const { email, password } = credentials;
   const User = this;
 
   return User.findOne({email})

@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import Message from '../models/Message';
 import User from '../models/User';
 import { IUser } from '../entities/';
-import { resolve } from 'path';
+import { IMessageView, IMessageCreate } from 'entities/message';
 
 export default class MessageController {
   constructor() {
@@ -15,11 +15,12 @@ export default class MessageController {
 
   public sendMessage(req: Request, res: Response) {
     const currentUser = req.body.user._id;
-    const newMessage = new Message({
+    const messageCreate: IMessageCreate = {
       text: req.body.text,
       recipient_id: req.body.recipient_id,
       createdBy: currentUser
-    });
+    };
+    const newMessage = new Message(messageCreate);
 
     newMessage.save()
       .then(result => {
@@ -77,7 +78,7 @@ export default class MessageController {
     for (let msg of messagesData) {
       try {
         const partner: IUser = await this.getUser(msg[targetUser]);
-        const result = {
+        const result: IMessageView = {
           _id: msg._id,
           text: msg.text,
           createdAt: msg.createdAt,

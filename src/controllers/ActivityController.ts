@@ -4,7 +4,7 @@ import Location from '../models/Location';
 import Activity from '../models/Activity';
 import ActivityType from '../models/ActivityType';
 import User from '../models/User';
-import { IEvent, ILocation, IActivity, IActivityType, IComment, IUser, ILike } from '../entities/';
+import { IEventView, ILocationView, IActivityView, IActivityCreate, IActivityTypeView, IComment, IUser, ILike } from '../entities/';
 
 export default class ActivityController {
   constructor() {
@@ -43,7 +43,7 @@ export default class ActivityController {
           res.send(err);
       }
 
-      const results: IActivity[] = [];
+      const results: IActivityView[] = [];
       for (let activity of activities) {
         try {
           const data = await Promise.all([
@@ -51,8 +51,8 @@ export default class ActivityController {
             this.getActivityType(activity.activityType_id)
           ]);
 
-          const location: ILocation = data[0];
-          const activityType: IActivityType = data[1];
+          const location: ILocationView = data[0];
+          const activityType: IActivityTypeView = data[1];
           const result = this.createActivity(activity, location, activityType);
           results.push(result);
         } catch (error) {
@@ -82,8 +82,8 @@ export default class ActivityController {
           this.getActivityType(activity.activityType_id)
         ]);
 
-        const location: ILocation = data[0];
-        const activityType: IActivityType = data[1];
+        const location: ILocationView = data[0];
+        const activityType: IActivityTypeView = data[1];
         const result = this.createActivity(activity, location, activityType);
         res.json(result);
       } catch (error) {
@@ -104,7 +104,7 @@ export default class ActivityController {
       if(err){
         res.send(err);
       }
-      res.json({ message: 'Successfully deleted activity!'});
+      res.status(200).send();
     });
   }
 
@@ -268,8 +268,8 @@ export default class ActivityController {
     return data;
   }
 
-  private createActivity(activity: IActivity, location: ILocation, activityType: IActivityType): IActivity {
-    return <IActivity>{
+  private createActivity(activity: IActivityView, location: ILocationView, activityType: IActivityTypeView): IActivityView {
+    return <IActivityView>{
       _id: activity._id,
       date: activity.date,
       location: location,
@@ -284,7 +284,7 @@ export default class ActivityController {
   }
 
   private getLocation(location_id: string) {
-    return new Promise<ILocation>((resolve, reject) => {
+    return new Promise<ILocationView>((resolve, reject) => {
       Location.findById(location_id).then(result => {
         if (!result){
             reject(`No Location with ID: ${location_id}`);
@@ -306,7 +306,7 @@ export default class ActivityController {
   }
 
   private getActivityType(activityType_id: string) {
-    return new Promise<IActivityType>((resolve, reject) => {
+    return new Promise<IActivityTypeView>((resolve, reject) => {
       ActivityType.findById(activityType_id).then(result => {
         if (!result){
             reject(`No ActivityType with ID: ${activityType_id}`);

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import User from '../models/User';
-import { ICurrentUser, IUser } from 'entities';
+import { ICurrentUser, IUser, IRegisterUser, ILoginUser } from 'entities';
 
 export default class UserController {
   public logOut(req: Request, res: Response) {
@@ -19,11 +19,13 @@ export default class UserController {
   }
 
   public addNewUser(req: Request, res: Response) {
-    const newUser = new User({
+    const registerUser: IRegisterUser = {
       email: req.body.email,
       password: req.body.password,
       displayName: req.body.displayName
-    });
+    };
+
+    const newUser = new User(registerUser);
 
     newUser.save()
       .then(() => newUser.generateAuthToken())
@@ -48,7 +50,12 @@ export default class UserController {
   }
 
   public loginWithUser(req: Request, res: Response) {
-    User.findByCredentials(req.body.email, req.body.password)
+    const loginUser: ILoginUser = {
+      email: req.body.email, 
+      password: req.body.password
+    };
+
+    User.findByCredentials(loginUser)
       .then(user => user.generateAuthToken()
         .then(token => {
           const { _id, displayName, email } = user;

@@ -1,74 +1,19 @@
-interface IBaseEntity {
+import { IActivityTypeView } from './activity-type';
+import { ILatLng, ICoordinates, ILocationCreate, ILocationView } from './location';
+import { IUser, ICurrentUser, IRegisterUser, ILoginUser } from './user';
+import { IEventCreate, IEventView } from './event';
+import { IActivityCreate, IActivityView, IComment, ILike } from './activity';
+
+export interface IBaseEntity {
   _id: string,
   createdBy: string,
   createdAt: Date
 }
 
-export interface ILike {
-  _id: string,
-  createdAt: Date,
-  createdBy: IUser
-}
-
-export interface ILoginUser {
-  email: string,
-  password: string
-}
-
-export interface IRegisterUser extends ILocation {
-  displayName: string,
-}
-
-export interface IUser {
-  _id: string,
-  email: string,
-  displayName: string
-}
-
-export interface ICurrentUser extends IUser {
-  token: string;
-}
-
-export interface IActivityType extends IBaseEntity {
-  name: string,
-}
-
-export interface IComment {
-  _id: string,
-  text: string,
-  createdAt: Date,
-  createdBy: IUser
-}
-
-export interface ILatLng {
-  lat: number,
-  lng: number
-}
-
-export interface ICoordinates {
-  center: ILatLng,
-  routeCoords: ILatLng[],
-  zoom: number
-}
-
-export interface ILocation extends IBaseEntity {
-  name: string,
-  coordinates: string
-}
-
-export interface IEvent extends IBaseEntity {
-  name: string,
-  date: Date,
-  location: ILocation,
-  attendees: string[]
-}
-
-export interface IActivity extends IBaseEntity {
-  date: Date,
-  location: ILocation,
-  activityType: IActivityType,
-  durationInSeconds: number,
-  distanceInMeters: number,
-  comments: IComment[],
-  likes: string[]
-}
+export {
+  IActivityTypeView,
+  ILatLng, ICoordinates, ILocationCreate, ILocationView,
+  IUser, ICurrentUser, IRegisterUser, ILoginUser,
+  IActivityCreate, IActivityView, IComment, ILike,
+  IEventCreate, IEventView
+};
