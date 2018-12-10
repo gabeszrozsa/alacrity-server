@@ -8,6 +8,7 @@ export default class EventController {
   constructor() {
     this.getEvent = this.getEvent.bind(this);
     this.getAllEvents = this.getAllEvents.bind(this);
+    this.getRecentEvents = this.getRecentEvents.bind(this);
     this.inviteUsers = this.inviteUsers.bind(this);
     this.getAttendees = this.getAttendees.bind(this);
     this.getAttendeesWithUsers = this.getAttendeesWithUsers.bind(this);
@@ -42,6 +43,30 @@ export default class EventController {
             results.push(result);
           } catch (error) {
             console.log('[ERROR] - EventController :: getAllEvents', event._id);
+            console.log('[ERROR] No location with ID', event.location_id);
+            res.status(400).send(error);
+          }
+        }
+
+        res.json(results);
+    })
+    .catch(error => res.send(error));
+  }
+
+  public getRecentEvents(req: Request, res: Response) {
+    Event
+      .find({ 'date': { $gte: new Date().toISOString() } })
+      .sort('date')
+      .exec()
+      .then(async (events) => {
+        const results: IEventView[] = [];
+        for (let event of events) {
+          try {
+            const location = await this.getLocationForEvent(event.location_id);
+            const result = this.mapEventWithLocation(event, location);
+            results.push(result);
+          } catch (error) {
+            console.log('[ERROR] - EventController :: getRecentEvents', event._id);
             console.log('[ERROR] No location with ID', event.location_id);
             res.status(400).send(error);
           }

@@ -60,6 +60,7 @@ export class Routes {
     public setEventRoutes(app): void {
       app.post('/api/event', this.userCtrl.authenticate, this.eventCtrl.addNewEvent);
       app.get('/api/event', this.userCtrl.authenticate, this.eventCtrl.getAllEvents);
+      app.get('/api/event/recent', this.userCtrl.authenticate, this.eventCtrl.getRecentEvents);
       app.get('/api/event/:id', this.userCtrl.authenticate, this.eventCtrl.getEvent);
       app.delete('/api/event/:id', this.userCtrl.authenticate, this.eventCtrl.deleteEvent);
       app.patch('/api/event/:id', this.userCtrl.authenticate, this.eventCtrl.updateEvent);
@@ -71,6 +72,7 @@ export class Routes {
     public setActivityRoutes(app): void {
       app.post('/api/activity', this.userCtrl.authenticate, this.activityCtrl.addNewActivity);
       app.get('/api/activity', this.userCtrl.authenticate, this.activityCtrl.getAllActivities);
+      app.get('/api/activity/my', this.userCtrl.authenticate, this.activityCtrl.getMyActivities);
       app.get('/api/activity/:id', this.userCtrl.authenticate, this.activityCtrl.getActivity);
       app.delete('/api/activity/:id', this.userCtrl.authenticate, this.activityCtrl.deleteActivity);
       app.patch('/api/activity/:id', this.userCtrl.authenticate, this.activityCtrl.updateActivity);

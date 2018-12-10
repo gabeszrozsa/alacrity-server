@@ -10,6 +10,7 @@ export default class ActivityController {
   constructor() {
     this.getActivity = this.getActivity.bind(this);
     this.getAllActivities = this.getAllActivities.bind(this);
+    this.getMyActivities = this.getMyActivities.bind(this);
     this.getComments = this.getComments.bind(this);
     this.addComment = this.addComment.bind(this);
     this.deleteComment = this.deleteComment.bind(this);
@@ -36,6 +37,33 @@ export default class ActivityController {
   }
 
   public getAllActivities(req: Request, res: Response) {
+    Activity.find({}, async (err, activities) => {
+      if (err) {
+          res.send(err);
+      }
+
+      const results: IActivityView[] = [];
+      for (let activity of activities) {
+        try {
+          const data = await Promise.all([
+            this.getLocation(activity.location_id),
+            this.getActivityType(activity.activityType_id)
+          ]);
+
+          const location: ILocationView = data[0];
+          const activityType: IActivityTypeView = data[1];
+          const result = this.createActivity(activity, location, activityType);
+          results.push(result);
+        } catch (error) {
+          console.log('[ERROR] - ActivityController :: getAllActivities');
+        }
+      }
+
+      res.json(results);
+    });
+  }
+
+  public getMyActivities(req: Request, res: Response) {
     const currentUser = req.body.user._id;
     
     Activity.find({ createdBy: currentUser }, async (err, activities) => {
