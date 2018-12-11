@@ -1,18 +1,21 @@
 {
-  "name": "astro-server",
+  "name": "alacrity",
   "version": "1.0.0",
   "description": "",
   "main": "dist/server.js",
   "scripts": {
     "start": "node dist/server.js",
+	  "build": "npm run server-build && npm run client-build",
     "server-start": "ts-node src/server.ts",
     "server-dev": "node ./node_modules/nodemon/bin/nodemon.js",
     "server-build": "tsc",
     "server-prod": "npm run build && npm run start",
-    "server-test": "mocha --require ts-node/register test/**/*.ts",
+    "server-test": "mocha --exit --require ts-node/register test/**/*.ts",
     "client-start": "cd client && npm start",
-	"postinstall": "npm run server-build",
-    "dev": "concurrently --kill-others-on-fail \"npm run server-dev\" \"npm run client-start\""
+	  "client-build": "cd client && npm run build",
+    "postinstall": "npm run build",
+    "dev": "concurrently --kill-others-on-fail \"npm run server-dev\" \"npm run client-start\"",
+    "prod": "concurrently --kill-others-on-fail \"npm run server-start\" \"npm run client-start\""
   },
   "engines": {
     "node": "8.11.4"

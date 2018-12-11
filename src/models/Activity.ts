@@ -9,10 +9,12 @@ const ActivitySchema = new Schema({
   },
   location_id: {
     type: Schema.Types.ObjectId,
+    ref: 'Location',
     required: [true, 'Enter an activity location']
   },
   activityType_id: {
     type: Schema.Types.ObjectId,
+    ref: 'ActivityType',
     required: [true, 'Enter an activity type']
   },
   durationInSeconds: {
@@ -51,6 +53,7 @@ const ActivitySchema = new Schema({
   },
   createdBy: {
     type: Schema.Types.ObjectId,
+    ref: 'User',
     required: true
   },
   createdAt: {

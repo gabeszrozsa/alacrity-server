@@ -9,6 +9,7 @@ interface IActivityBase {
 export interface IActivityCreate extends IActivityBase {
   location_id: string,
   activityType_id: string,
+  createdBy: string
 }
 
 export interface IActivityView extends IBaseEntity, IActivityBase {
