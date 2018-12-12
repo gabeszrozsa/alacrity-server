@@ -48,7 +48,6 @@ describe('Message', function() {
             expect(res.body.sent).to.exist;
             expect(res.body.sent.length).to.equal(1);
             expect(res.body.sent[0]._id).to.exist;
-            expect(res.body.sent[0].partner).to.exist;
             expect(res.body.sent[0].createdBy).to.exist;
             expect(res.body.sent[0].createdAt).to.exist;
             expect(res.body.sent[0].recipient_id).to.exist;
@@ -84,7 +83,6 @@ describe('Message', function() {
             expect(res.body.sent).to.exist;
             expect(res.body.sent.length).to.equal(1);
             expect(res.body.sent[0]._id).to.exist;
-            expect(res.body.sent[0].partner).to.exist;
             expect(res.body.sent[0].createdBy).to.exist;
             expect(res.body.sent[0].createdAt).to.exist;
             expect(res.body.sent[0].recipient_id).to.exist;
@@ -109,7 +107,6 @@ describe('Message', function() {
             expect(res.body.received).to.exist;
             expect(res.body.received.length).to.equal(1);
             expect(res.body.received[0]._id).to.exist;
-            expect(res.body.received[0].partner).to.exist;
             expect(res.body.received[0].createdBy).to.exist;
             expect(res.body.received[0].createdAt).to.exist;
             expect(res.body.received[0].recipient_id).to.exist;

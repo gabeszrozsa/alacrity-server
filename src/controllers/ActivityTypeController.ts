@@ -26,7 +26,7 @@ export default class ActivityTypeController {
 
     ActivityTypeRepository.getActivityType(id)
       .then((activity: IActivityTypeView) => res.json(activity))
-      .catch(error => res.status(400).send(error));
+      .catch(error => res.status(404).send(error));
   }
 
   public deleteActivityType(req: Request, res: Response) {
@@ -34,7 +34,7 @@ export default class ActivityTypeController {
 
     ActivityTypeRepository.deleteActivityType(id)
       .then(() => res.status(200).send())
-      .catch(error => res.status(400).send(error));
+      .catch(error => res.status(404).send(error));
   }
 
   public updateActivityType(req: Request, res: Response) {
@@ -46,6 +46,6 @@ export default class ActivityTypeController {
 
     ActivityTypeRepository.updateActivityType(id, data)
       .then(id => res.send(id))
-      .catch(error => res.status(400).send(error));
+      .catch(error => res.status(404).send(error));
   }
 }

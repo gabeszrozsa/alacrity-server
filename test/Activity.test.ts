@@ -67,8 +67,8 @@ describe('Activity', function() {
             expect(res.body[0]._id).to.exist;
             expect(res.body[0].createdBy).to.exist;
             expect(res.body[0].createdAt).to.exist;
-            expect(res.body[0].activityType).to.exist;
-            expect(res.body[0].location).to.exist;
+            expect(res.body[0].activityType_id).to.exist;
+            expect(res.body[0].location_id).to.exist;
             expect(res.body[0].date).to.exist;
             expect(res.body[0].durationInSeconds).to.equal(activity.durationInSeconds);
             expect(res.body[0].distanceInMeters).to.equal(activity.distanceInMeters);
@@ -100,8 +100,8 @@ describe('Activity', function() {
             expect(res.body._id).to.exist;
             expect(res.body.createdBy).to.exist;
             expect(res.body.createdAt).to.exist;
-            expect(res.body.activityType).to.exist;
-            expect(res.body.location).to.exist;
+            expect(res.body.activityType_id).to.exist;
+            expect(res.body.location_id).to.exist;
             expect(res.body.date).to.exist;
             expect(res.body.durationInSeconds).to.equal(activity.durationInSeconds);
             expect(res.body.distanceInMeters).to.equal(activity.distanceInMeters);

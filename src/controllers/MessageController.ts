@@ -29,6 +29,6 @@ export default class MessageController {
 
     MessageRepository.deleteMessage(id, currentUser)
       .then((messages: IMessageView[]) => res.json(messages))
-      .catch(error => res.status(400).send(error))
+      .catch(error => res.status(404).send(error))
   }
 }

@@ -38,7 +38,7 @@ export default class ActivityController {
 
     ActivityRepository.getActivity(id)
       .then((activity: IActivityView) => res.json(activity))
-      .catch(error => res.status(400).send(error));
+      .catch(error => res.status(404).send(error));
   }
 
   public deleteActivity(req: Request, res: Response) {
@@ -46,7 +46,7 @@ export default class ActivityController {
 
     ActivityRepository.deleteActivity(id)
       .then(() => res.status(200).send())
-      .catch(error => res.status(400).send(error));
+      .catch(error => res.status(404).send(error));
   }
 
   public updateActivity(req: Request, res: Response) {
@@ -61,7 +61,7 @@ export default class ActivityController {
 
     ActivityRepository.updateActivity(id, data)
       .then(id => res.send(id))
-      .catch(error => res.status(400).send(error));
+      .catch(error => res.status(404).send(error));
   }
 
   public addComment(req: Request, res: Response) {

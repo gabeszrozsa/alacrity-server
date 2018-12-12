@@ -27,7 +27,7 @@ export default class LocationController {
 
     LocationRepository.getLocation(id)
       .then((loc: ILocationView) => res.json(loc))
-      .catch(error => res.status(400).send(error));
+      .catch(error => res.status(404).send(error));
   }
 
   public deleteLocation(req: Request, res: Response) {
@@ -35,7 +35,7 @@ export default class LocationController {
 
     LocationRepository.deleteLocation(id)
       .then(() => res.status(200).send())
-      .catch(error => res.status(400).send(error));
+      .catch(error => res.status(404).send(error));
   }
 
   public updateLocation(req: Request, res: Response) {
@@ -47,7 +47,7 @@ export default class LocationController {
 
     LocationRepository.updateLocation(id, data)
       .then(id => res.send(id))
-      .catch(error => res.status(400).send(error));
+      .catch(error => res.status(404).send(error));
   }
 
 }
