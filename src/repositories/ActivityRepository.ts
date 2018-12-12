@@ -1,5 +1,5 @@
 import { IActivityCreate, IActivityView, IComment, ILike } from '../entities';
-import Activity from '../models/Activity';
+import { Activity, ActivityType, Location, User } from '../models/';
 
 export default class ActivityRepository {
 
@@ -23,9 +23,9 @@ export default class ActivityRepository {
     return new Promise((resolve, reject) => {
       Activity
         .find(findQuery)
-        .populate('createdBy', 'displayName')
-        .populate('activityType_id', 'name')
-        .populate('location_id', 'name')
+        .populate('createdBy', 'displayName', User)
+        .populate('activityType_id', 'name', ActivityType)
+        .populate('location_id', 'name', Location)
         .exec()
         .then((activities: IActivityView[]) => {
           resolve(activities);
@@ -50,9 +50,9 @@ export default class ActivityRepository {
     return new Promise((resolve, reject) => {
       Activity
         .findById(id)
-        .populate('createdBy', 'displayName')
-        .populate('activityType_id', 'name')
-        .populate('location_id')
+        .populate('createdBy', 'displayName', User)
+        .populate('activityType_id', 'name', ActivityType)
+        .populate('location_id', 'name coordinates createdBy', Location)
         .then((activity: IActivityView) => resolve(activity))
         .catch(error => {
           console.log('[ERROR] - ActivityRepository :: getActivity | id: ', id);
@@ -104,7 +104,7 @@ export default class ActivityRepository {
     return new Promise((resolve, reject) => {
       Activity
         .findOneAndUpdate({ _id: id }, { $push: {comments: comment } }, { new: true })
-        .populate('comments.createdBy', 'displayName')
+        .populate('comments.createdBy', 'displayName', User)
         .then((activity: IActivityView) => resolve(activity.comments))
         .catch(error => {
           console.log('[ERROR] - ActivityRepository :: addComment');
@@ -124,7 +124,7 @@ export default class ActivityRepository {
     return new Promise((resolve, reject) => {
       Activity
         .findById(id)
-        .populate('comments.createdBy', 'displayName')
+        .populate('comments.createdBy', 'displayName', User)
         .then((activity: IActivityView) => resolve(activity.comments))
         .catch(error => {
           console.log('[ERROR] - ActivityRepository :: getComments');
@@ -147,7 +147,7 @@ export default class ActivityRepository {
           { $pull: { comments: { _id: commentId }}},
           { new: true }
         )
-        .populate('comments.createdBy', 'displayName')
+        .populate('comments.createdBy', 'displayName', User)
         .then((activity: IActivityView) => resolve(activity.comments))
         .catch(error => {
           console.log('[ERROR] - ActivityRepository :: deleteComment');
@@ -171,7 +171,7 @@ export default class ActivityRepository {
           { $addToSet: { likes: like } }, 
           { new: true }
         )
-        .populate('likes.createdBy', 'displayName')
+        .populate('likes.createdBy', 'displayName', User)
         .then((activity: IActivityView) => {
           const likes = activity ? activity.likes : [];
           resolve(likes);
@@ -194,7 +194,7 @@ export default class ActivityRepository {
     return new Promise((resolve, reject) => {
       Activity
         .findById(id)
-        .populate('likes.createdBy', 'displayName')
+        .populate('likes.createdBy', 'displayName', User)
         .then((activity: IActivityView) => resolve(activity.likes))
         .catch(error => {
           console.log('[ERROR] - ActivityRepository :: getLikes');
@@ -217,7 +217,7 @@ export default class ActivityRepository {
           { $pull: { likes: { _id: likeId } } },
           { new: true }
         )
-        .populate('likes.createdBy', 'displayName')
+        .populate('likes.createdBy', 'displayName', User)
         .then((activity: IActivityView) => resolve(activity.likes))
         .catch(error => {
           console.log('[ERROR] - ActivityRepository :: deleteLike');

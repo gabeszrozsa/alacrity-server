@@ -1,5 +1,5 @@
 import { IActivityTypeCreate, IActivityTypeView } from '../entities';
-import ActivityType from '../models/Activity';
+import { ActivityType, User } from '../models/';
 
 export default class ActivityTypeRepository {
 
@@ -21,7 +21,7 @@ export default class ActivityTypeRepository {
     return new Promise((resolve, reject) => {
       ActivityType
         .find({})
-        .populate('createdBy', 'displayName')
+        .populate('createdBy', 'displayName', User)
         .exec()
         .then((at: IActivityTypeView[]) => {
           resolve(at);
@@ -42,7 +42,7 @@ export default class ActivityTypeRepository {
     return new Promise((resolve, reject) => {
       ActivityType
         .findById(id)
-        .populate('createdBy', 'displayName')
+        .populate('createdBy', 'displayName', User)
         .then((activityType: IActivityTypeView) => resolve(activityType))
         .catch(error => {
           console.log('[ERROR] - ActivityTypeRepository :: getActivityType | id: ', id);
