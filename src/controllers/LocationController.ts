@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import Location from '../models/Location';
 import { ILocationCreate, ILocationView } from '../entities';
+import { LocationRepository } from '../repositories';
 
 export default class LocationController {
 
@@ -11,65 +12,43 @@ export default class LocationController {
       createdBy: req.body.user._id
     };
 
-    const newLocation = new Location(locationCreate);
-
-    newLocation.save()
-      .then(token => res.send(newLocation._id))
-      .catch(error => res.status(400).send(error));
+    LocationRepository.createLocation(locationCreate)
+      .then(id => res.send(id))
+      .catch(error => res.status(400).send(error))
   }
 
   public getAllLocations(req: Request, res: Response) {
-    Location.find({}, (err, result: ILocationView[]) => {
-      if(err){
-          res.send(err);
-      }
-      res.json(result);
-    });
+    LocationRepository.getAllLocations()
+      .then((locations: ILocationView[]) => res.json(locations))
+      .catch(error => res.status(400).send(error));
   }
 
   public getLocation(req: Request, res: Response) {
     const id = req.params.id;
 
-    if (!Location.validateID(id)) {
-        return res.status(404).send();
-    }
-
-    Location.findById(id).then((result: ILocationView) => {
-      if(!result){
-          res.status(404).send();
-      }
-      res.json(result);
-    });
+    LocationRepository.getLocation(id)
+      .then((loc: ILocationView) => res.json(loc))
+      .catch(error => res.status(400).send(error));
   }
 
   public deleteLocation(req: Request, res: Response) {
     const id = req.params.id;
 
-    if (!Location.validateID(id)) {
-        return res.status(404).send();
-    }
-
-    Location.deleteOne({ _id: id }, (err, result) => {
-      if(err){
-        res.send(err);
-      }
-      res.status(200).send();
-    });
+    LocationRepository.deleteLocation(id)
+      .then(() => res.status(200).send())
+      .catch(error => res.status(400).send(error));
   }
 
   public updateLocation(req: Request, res: Response) {
     const id = req.params.id;
 
-    if (!Location.validateID(id)) {
-        return res.status(404).send();
-    }
-    
-    Location.findOneAndUpdate({ _id: req.params.id }, req.body, { new: true }, (err, result) => {
-      if(err){
-        res.send(err);
-      }
-      res.json(result);
-    });
+    const data: ILocationCreate = {
+      name: req.body.name,
+    };
+
+    LocationRepository.updateLocation(id, data)
+      .then(id => res.send(id))
+      .catch(error => res.status(400).send(error));
   }
 
 }

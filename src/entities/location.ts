@@ -13,8 +13,11 @@ export interface ICoordinates {
 
 export interface ILocationCreate {
   name: string,
-  coordinates: ICoordinates,
-  createdBy: string
+  coordinates?: ICoordinates,
+  createdBy?: string
 }
 
-export interface ILocationView extends ILocationCreate, IBaseEntity {}
+export interface ILocationView extends IBaseEntity {
+  name: string,
+  coordinates?: ICoordinates,
+}
