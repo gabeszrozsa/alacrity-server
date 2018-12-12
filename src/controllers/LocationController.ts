@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-import Location from '../models/Location';
 import { ILocationCreate, ILocationView } from '../entities';
 import { LocationRepository } from '../repositories';
 
