@@ -9,7 +9,7 @@ interface IActivityBase {
 export interface IActivityCreate extends IActivityBase {
   location_id: string,
   activityType_id: string,
-  createdBy: string
+  createdBy?: string
 }
 
 export interface IActivityView extends IBaseEntity, IActivityBase {
@@ -20,14 +20,14 @@ export interface IActivityView extends IBaseEntity, IActivityBase {
 }
 
 export interface IComment {
-  _id: string,
+  _id?: string,
   text: string,
-  createdAt: Date,
+  createdAt?: Date,
   createdBy: IUser
 }
 
 export interface ILike {
-  _id: string,
-  createdAt: Date,
+  _id?: string,
+  createdAt?: Date,
   createdBy: IUser
 }

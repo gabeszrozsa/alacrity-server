@@ -2,7 +2,9 @@ import { IBaseEntity } from './';
 
 export interface IActivityTypeCreate {
   name: string,
-  createdBy: string
+  createdBy?: string
 }
 
-export interface IActivityTypeView extends IBaseEntity, IActivityTypeCreate {}
+export interface IActivityTypeView extends IBaseEntity {
+  name: string,
+}

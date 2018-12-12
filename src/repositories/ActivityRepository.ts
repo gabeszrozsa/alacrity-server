@@ -1,4 +1,4 @@
-import { IActivityCreate, IActivityView } from '../entities';
+import { IActivityCreate, IActivityView, IComment, ILike } from '../entities';
 import Activity from '../models/Activity';
 
 export default class ActivityRepository {
@@ -77,4 +77,156 @@ export default class ActivityRepository {
         });
     });
   }
+
+  public static updateActivity(id: string, data: IActivityCreate) {
+    if (!Activity.validateID(id)) {
+      Promise.reject();
+    }
+    
+    return new Promise((resolve, reject) => {
+      Activity.findOneAndUpdate({ _id: id }, data, { new: true })
+        .then((activity: IActivityView) => resolve(activity))
+        .catch(error => {
+          console.log('[ERROR] - ActivityRepository :: updateActivity');
+          console.log('id: | ', id);
+          console.log('data: | ', data);
+          console.log(error);
+          reject(error)
+        });
+    });
+  }
+
+  public static addComment(id: string, comment: IComment) {
+    if (!Activity.validateID(id)) {
+      Promise.reject();
+    }
+    
+    return new Promise((resolve, reject) => {
+      Activity
+        .findOneAndUpdate({ _id: id }, { $push: {comments: comment } }, { new: true })
+        .populate('comments.createdBy', 'displayName')
+        .then((activity: IActivityView) => resolve(activity.comments))
+        .catch(error => {
+          console.log('[ERROR] - ActivityRepository :: addComment');
+          console.log('id: | ', id);
+          console.log('comment: | ', comment);
+          console.log(error);
+          reject(error)
+        });
+    });
+  }
+
+  public static getComments(id: string) {
+    if (!Activity.validateID(id)) {
+      Promise.reject();
+    }
+    
+    return new Promise((resolve, reject) => {
+      Activity
+        .findById(id)
+        .populate('comments.createdBy', 'displayName')
+        .then((activity: IActivityView) => resolve(activity.comments))
+        .catch(error => {
+          console.log('[ERROR] - ActivityRepository :: getComments');
+          console.log('id: | ', id);
+          console.log(error);
+          reject(error)
+        });
+    });
+  }
+
+  public static deleteComment(id: string, commentId: string) {
+    if (!Activity.validateID(id)) {
+      Promise.reject();
+    }
+    
+    return new Promise((resolve, reject) => {
+      Activity
+        .findOneAndUpdate(
+          { _id: id },
+          { $pull: { comments: { _id: commentId }}},
+          { new: true }
+        )
+        .populate('comments.createdBy', 'displayName')
+        .then((activity: IActivityView) => resolve(activity.comments))
+        .catch(error => {
+          console.log('[ERROR] - ActivityRepository :: deleteComment');
+          console.log('id: | ', id);
+          console.log('commentId: | ', commentId);
+          console.log(error);
+          reject(error)
+        });
+    });
+  }
+
+  public static addLike(id: string, like: ILike) {
+    if (!Activity.validateID(id)) {
+      Promise.reject();
+    }
+    
+    return new Promise((resolve, reject) => {
+      Activity
+        .findOneAndUpdate(
+          { _id: id, 'likes.createdBy': { $ne: like.createdBy } }, 
+          { $addToSet: { likes: like } }, 
+          { new: true }
+        )
+        .populate('likes.createdBy', 'displayName')
+        .then((activity: IActivityView) => {
+          const likes = activity ? activity.likes : [];
+          resolve(likes);
+        })
+        .catch(error => {
+          console.log('[ERROR] - ActivityRepository :: addLike');
+          console.log('id: | ', id);
+          console.log('like: | ', like);
+          console.log(error);
+          reject(error)
+        });
+    });
+  }
+
+  public static getLikes(id: string) {
+    if (!Activity.validateID(id)) {
+      Promise.reject();
+    }
+    
+    return new Promise((resolve, reject) => {
+      Activity
+        .findById(id)
+        .populate('likes.createdBy', 'displayName')
+        .then((activity: IActivityView) => resolve(activity.likes))
+        .catch(error => {
+          console.log('[ERROR] - ActivityRepository :: getLikes');
+          console.log('id: | ', id);
+          console.log(error);
+          reject(error)
+        });
+    });
+  }
+
+  public static deleteLike(id: string, likeId: string) {
+    if (!Activity.validateID(id)) {
+      Promise.reject();
+    }
+    
+    return new Promise((resolve, reject) => {
+      Activity
+        .findOneAndUpdate(
+          { _id: id },
+          { $pull: { likes: { _id: likeId } } },
+          { new: true }
+        )
+        .populate('likes.createdBy', 'displayName')
+        .then((activity: IActivityView) => resolve(activity.likes))
+        .catch(error => {
+          console.log('[ERROR] - ActivityRepository :: deleteLike');
+          console.log('id: | ', id);
+          console.log('likeId: | ', likeId);
+          console.log(error);
+          reject(error)
+        });
+    });
+  }
+
 }

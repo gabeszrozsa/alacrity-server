@@ -29,7 +29,7 @@ const ActivitySchema = new Schema({
   },
   comments: {
       type: [{
-        createdBy: Schema.Types.ObjectId,
+        createdBy: { type: Schema.Types.ObjectId, ref: 'User' },
         createdAt: {
             type: Date,
             default: Date.now
@@ -43,7 +43,7 @@ const ActivitySchema = new Schema({
   },
   likes: {
     type: [{
-      createdBy: Schema.Types.ObjectId,
+      createdBy: { type: Schema.Types.ObjectId, ref: 'User' },
       createdAt: {
           type: Date,
           default: Date.now

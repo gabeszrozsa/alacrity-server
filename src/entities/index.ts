@@ -1,4 +1,4 @@
-import { IActivityTypeView } from './activity-type';
+import { IActivityTypeView, IActivityTypeCreate } from './activity-type';
 import { ILatLng, ICoordinates, ILocationCreate, ILocationView } from './location';
 import { IUser, ICurrentUser, IRegisterUser, ILoginUser } from './user';
 import { IEventCreate, IEventView } from './event';
@@ -11,7 +11,7 @@ export interface IBaseEntity {
 }
 
 export {
-  IActivityTypeView,
+  IActivityTypeView, IActivityTypeCreate,
   ILatLng, ICoordinates, ILocationCreate, ILocationView,
   IUser, ICurrentUser, IRegisterUser, ILoginUser,
   IActivityCreate, IActivityView, IComment, ILike,
