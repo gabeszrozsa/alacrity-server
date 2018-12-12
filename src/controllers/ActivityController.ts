@@ -45,7 +45,7 @@ export default class ActivityController {
     const id = req.params.id;
 
     ActivityRepository.deleteActivity(id)
-      .then((activity: IActivityView) => res.json(activity))
+      .then(() => res.status(200).send())
       .catch(error => res.status(400).send(error));
   }
 

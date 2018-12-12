@@ -17,7 +17,7 @@ export default class ActivityTypeController {
 
   public getAllActivityTypes(req: Request, res: Response) {
     ActivityTypeRepository.getAllActivityTypes()
-      .then((activities: IActivityTypeView) => res.json(activities))
+      .then((activities: IActivityTypeView[]) => res.json(activities))
       .catch(error => res.status(400).send(error));
   }
 
@@ -33,7 +33,7 @@ export default class ActivityTypeController {
     const id = req.params.id;
 
     ActivityTypeRepository.deleteActivityType(id)
-      .then((activity: IActivityTypeView) => res.json(activity))
+      .then(() => res.status(200).send())
       .catch(error => res.status(400).send(error));
   }
 
