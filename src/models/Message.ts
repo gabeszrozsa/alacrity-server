@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 const MessageSchema = new Schema({
   recipient_id: {
     type: Schema.Types.ObjectId,
+    ref: 'User',
     required: [true, 'Enter Recipient ID']
   },
   text: {
@@ -14,6 +15,7 @@ const MessageSchema = new Schema({
   },
   createdBy: {
     type: Schema.Types.ObjectId,
+    ref: 'User',
     required: true
   },
   createdAt: {

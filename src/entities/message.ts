@@ -6,6 +6,8 @@ export interface IMessageCreate {
   createdBy: string
 }
 
-export interface IMessageView extends IMessageCreate, IBaseEntity {
-  partner: IUser
+export interface IMessageView extends IBaseEntity {
+  partner: IUser,
+  text: string,
+  recipient_id: IUser
 }
