@@ -1,5 +1,4 @@
 /node_modules
 /dist
-/client
 /src/config/dev.ts
 /src/config/test.ts
