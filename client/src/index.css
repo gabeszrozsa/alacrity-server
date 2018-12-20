@@ -1,0 +1,103 @@
+@import '~antd/dist/antd.css';
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+}
+
+button.add-button {
+  margin-right: 10px;
+  margin-bottom: 40px;
+}
+
+.app-content {
+  margin: 0px 16px;
+  padding-top: 20px;
+  width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* Loading Screen */
+div.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+div.loading > h1 {
+  flex: 1;
+  text-align: center;
+}
+
+div.loading > div.ant-spin {
+  margin-right: 25px;
+}
+
+/* Layout Header */
+#header {
+  background: #fff;
+  padding: 0;
+}
+
+#header > h2 {
+  text-align: right;
+}
+
+#header img {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  margin-right: 30px;
+  margin-left: 10px;
+}
+
+
+/* ANT DESIGN OVERRIDE / EXTENSION */
+.ant-table-thead > tr, .ant-table-tbody > tr {
+  background-color: white;
+}
+
+tr.ant-table-row:hover {
+    cursor: pointer;
+}
+
+.ant-list-vertical .ant-list-item-meta-avatar {
+  display: block;
+}
+
+.ant-avatar {
+  border-radius: unset;
+}
+.ant-divider-inner-text > .anticon {
+  margin-right: 5px;
+  margin-left: -10px;
+}
+
+/* GOOGLE MAPS CONTAINER */
+.map {
+    width: 600px !important;
+    height: 600px !important;
+}
+
+
+.activity-thumbnail.ant-card {
+  width: 300px;
+  display: inline-block;
+  margin: 10px;
+}
+
+.activity-thumbnail.ant-card span.divider {
+  font-weight: bold;
+  margin-left: 8px;
+  margin-right: 10px;
+  opacity: 0.4;
+}
+
+.news-header-divider.ant-divider-horizontal.ant-divider-with-text {
+  color: #1890ff;
+}

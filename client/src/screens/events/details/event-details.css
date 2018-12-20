@@ -1,0 +1,34 @@
+.attendee-card {
+  width: 300px;
+  margin-top: 16px;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 25px;
+}
+
+.attendee-card > .ant-card-body {
+  padding: 10px;
+}
+.attendee-card .ant-card-meta-detail {
+  padding-top: 5px;
+}
+
+.invite-users-select {
+    width: 100%;
+    max-width: 400px;
+    margin-left: auto;
+    display: block;
+    margin-right: auto;
+}
+
+.ant-card-meta-title > i.anticon {
+    font-size: 14px;
+    float: right;
+    padding-top: 5px;
+    padding-right: 6px;
+    color: #f5222d;
+}
+
+.ant-card-meta-title > i.anticon:hover {
+  cursor: pointer;
+}
