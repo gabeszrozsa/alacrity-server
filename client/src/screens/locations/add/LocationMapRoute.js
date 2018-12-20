@@ -2,7 +2,8 @@ import React from 'react';
 import {GoogleApiWrapper, Map, Marker} from 'google-maps-react';
 import { Steps, Icon, Button } from 'antd';
 
-import { GOOGLE_MAPS_API_KEY } from '../../../config';
+// import { GOOGLE_MAPS_API_KEY } from '../../../config';
+const GOOGLE_MAPS_API_KEY = "xxxxx";
 
 const Step = Steps.Step;
 

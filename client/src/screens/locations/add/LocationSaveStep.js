@@ -3,7 +3,8 @@ import {GoogleApiWrapper, Map, Polyline} from 'google-maps-react';
 import { Steps, Icon } from 'antd';
 
 import LocationForm from '../LocationForm';
-import { GOOGLE_MAPS_API_KEY } from '../../../config';
+// import { GOOGLE_MAPS_API_KEY } from '../../../config';
+const GOOGLE_MAPS_API_KEY = "xxxxx";
 
 const Step = Steps.Step;
 

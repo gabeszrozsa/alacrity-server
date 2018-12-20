@@ -1,6 +1,7 @@
 import React from 'react';
 import {GoogleApiWrapper, Map, Polyline, Marker} from 'google-maps-react';
-import { GOOGLE_MAPS_API_KEY } from '../config';
+// import { GOOGLE_MAPS_API_KEY } from '../config';
+const GOOGLE_MAPS_API_KEY = "xxxxx";
 
 class LocationDetailsMap extends React.Component {
   render() {
