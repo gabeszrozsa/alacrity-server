@@ -1,0 +1,17 @@
+#header > h2 {
+  padding-right: 15px;
+}
+
+#header > h2 > span {
+  margin-right: 10px;
+}
+
+#header > h2 > .logout {
+  margin-left: 15px;
+  font-size: 14px;
+  color: #1890ff;
+}
+
+#header > h2 > .logout:hover {
+  cursor: pointer;
+}
