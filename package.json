@@ -5,7 +5,7 @@
   "main": "dist/server.js",
   "scripts": {
     "start": "node dist/server.js",
-	  "build": "npm run server-build && npm run client-build",
+	  "build": "npm run server-build",
     "server-start": "ts-node src/server.ts",
     "server-dev": "node ./node_modules/nodemon/bin/nodemon.js",
     "server-build": "tsc",
